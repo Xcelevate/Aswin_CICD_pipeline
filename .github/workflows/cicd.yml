@@ -23,7 +23,7 @@ jobs:
     needs: build
     steps:
       - name: Build step
-        run: exit 1
+        run: echo "Running scanning after build"
        
  
   release:
