@@ -1,4 +1,4 @@
-name: Use Secrets
+name: Use Variables and Secrets
 
 on:
   push:
@@ -11,9 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Use secret
+      - name: Use variables
         env:
+          DB_USER: ${{ vars.ASWIN_USER1412 }}
+        run: |
+          echo "Username is $DB_USER"
+
+      - name: Use secrets
+        env:
+          DB.USERNAME: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          echo "Username is ${{ secrets.DB_USER }}"
           echo "Password length is ${#DB_PASSWORD}"
