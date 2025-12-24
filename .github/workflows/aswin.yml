@@ -13,13 +13,13 @@ jobs:
     steps:
       - name: Use variables
         env:
-          DB_USER: ${{ vars.ASWIN_USER1412 }}
+          VARS_USERNAME: ${{ vars.ASWIN_USER1412 }}
         run: |
-          echo "Username is $DB_USER"
+          echo "Username is $ASWIN_USER1412"
 
-      - name: Use secrets
-        env:
-          DB.USERNAME: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      - name: Use secret
         run: |
+          echo "Username is ${{ secrets.DB_USER }}"
           echo "Password length is ${#DB_PASSWORD}"
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
