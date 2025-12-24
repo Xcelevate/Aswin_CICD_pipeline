@@ -1,0 +1,122 @@
+name: Complete CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build application
+        run: |
+          echo "Building application..."
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run unit tests
+        run: |
+          echo "Running tests..."
+
+  scanning:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Run security scan
+        run: |
+          echo "Running SAST / dependency scan..."
+
+  release:
+    name: Release Artifact
+    runs-on: ubuntu-latest
+    needs: scanning
+    steps:
+      - name: Create release
+        run: |
+          echo "Publishing artifact..."
+
+  dev-deployment:
+    name: Dev Deployment
+    runs-on: ubuntu-latest
+    needs: release
+    environment: dev
+    steps:
+      - name: Deploy to Dev
+        run: |
+          echo "Deploying to DEV environment..."
+
+  dev-testing:
+    name: Dev Testing
+    runs-on: ubuntu-latest
+    needs: dev-deployment
+    steps:
+      - name: Dev smoke tests
+        run: |
+          echo "Running DEV tests..."
+
+
+  sit-deployment:
+    name: SIT Deployment
+    runs-on: ubuntu-latest
+    needs: dev-testing
+    environment: sit
+    steps:
+      - name: Deploy to SIT
+        run: |
+          echo "Deploying to SIT environment..."
+
+  sit-testing:
+    name: SIT Testing
+    runs-on: ubuntu-latest
+    needs: sit-deployment
+    steps:
+      - name: SIT regression tests
+        run: |
+          echo "Running SIT tests..."
+
+
+  preprod-deployment:
+    name: PreProd Deployment
+    runs-on: ubuntu-latest
+    needs: sit-testing
+    environment: preproduction
+    steps:
+      - name: Deploy to PreProd
+        run: |
+          echo "Deploying to PRE-PRODUCTION..."
+          
+  preprod-testing:
+    name: PreProd Testing
+    runs-on: ubuntu-latest
+    needs: preprod-deployment
+    steps:
+      - name: PreProd validation tests
+        run: |
+          echo "Running PRE-PROD tests..."
+          
+  prod-deployment:
+    name: Production Deployment
+    runs-on: ubuntu-latest
+    needs: preprod-testing
+    environment: production
+    steps:
+      - name: Deploy to Production
+        run: |
+          echo "Deploying to PRODUCTION..."
+
+  prod-testing:
+    name: Production Testing
+    runs-on: ubuntu-latest
+    needs: prod-deployment
+    steps:
+      - name: Production smoke tests
+        run: |
+          echo "Running PRODUCTION tests..."
