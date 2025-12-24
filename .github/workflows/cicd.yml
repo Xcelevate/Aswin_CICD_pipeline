@@ -1,120 +1,95 @@
-name: Complete CD Pipeline
-
+name: CICD Pipeline Simulation
+ 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
-
+    branches: [ main ]
+ 
 jobs:
   build:
-    name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Build application
-        run: |
-          echo "Building application..."
+      - name: Build step
+        run: echo "Building the application"
+ 
   test:
-    name: Test
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test step
+        run: echo "Running tests after build"
+ 
+  scanning:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Run unit tests
-        run: |
-          echo "Running tests..."
-
-  scanning:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: scanning
-        run: |
-          echo "Running SAST / dependency scan..."
-
+      - name: Build step
+        run: exit 1
+       
+ 
   release:
-    name: release
+    needs: [test, scanning]
     runs-on: ubuntu-latest
-    needs: [test,scanning]
     steps:
-      - name: Create release
-        run: |
-          echo "Publishing artifact..."
-
+      - name: Test step
+        run: echo "Running tests after build"
+ 
   dev-deployment:
-    name: Dev Deployment
-    runs-on: ubuntu-latest
     needs: release
-    environment: dev
+    runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Dev
-        run: |
-          echo "Deploying to DEV environment..."
-
+      - name: Test step
+        run: echo "Running tests after build"
+ 
   dev-testing:
-    name: Dev Testing
-    runs-on: ubuntu-latest
     needs: dev-deployment
+    runs-on: ubuntu-latest
     steps:
-      - name: Dev smoke tests
-        run: |
-          echo "Running DEV tests..."
-
-
+      - name: Test step
+        run: echo "Running tests after build"
+ 
   sit-deployment:
-    name: SIT Deployment
-    runs-on: ubuntu-latest
     needs: dev-testing
-    environment: sit
+    runs-on: ubuntu-latest
     steps:
-      - name: Deploy to SIT
-        run: |
-          echo "Deploying to SIT environment..."
-
+      - name: Test step
+        run: echo "Running tests after build"
+ 
+ 
   sit-testing:
-    name: SIT Testing
-    runs-on: ubuntu-latest
     needs: sit-deployment
-    steps:
-      - name: SIT regression tests
-        run: |
-          echo "Running SIT tests..."
-
-
-  preprod-deployment:
-    name: PreProd Deployment
     runs-on: ubuntu-latest
+    steps:
+      - name: Test step
+        run: echo "Running tests after build"
+ 
+ 
+ 
+  pre-prod-deployment:
     needs: sit-testing
-    environment: preproduction
-    steps:
-      - name: Deploy to PreProd
-        run: |
-          echo "Deploying to PRE-PRODUCTION..."
-          
-  preprod-testing:
-    name: PreProd Testing
     runs-on: ubuntu-latest
-    needs: preprod-deployment
     steps:
-      - name: PreProd validation tests
-        run: |
-          echo "Running PRE-PROD tests..."
-          
+      - name: Test step
+        run: echo "Running tests after build"
+ 
+ 
+  pre-prod-testing:
+    needs: pre-prod-deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test step
+        run: echo "Running tests after build"
+ 
+ 
   prod-deployment:
-    name: Production Deployment
+    needs: pre-prod-testing
     runs-on: ubuntu-latest
-    needs: preprod-testing
-    environment: production
     steps:
-      - name: Deploy to Production
-        run: |
-          echo "Deploying to PRODUCTION..."
-
+      - name: Test step
+        run: echo "Running tests after build"
+ 
   prod-testing:
-    name: Production Testing
-    runs-on: ubuntu-latest
     needs: prod-deployment
+    runs-on: ubuntu-latest
     steps:
-      - name: Production smoke tests
-        run: |
-          echo "Running PRODUCTION tests..."
+      - name: Test step
+        run: echo "Running tests after build"
