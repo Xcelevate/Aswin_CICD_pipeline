@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Use variables
         env:
-          VARS_USERNAME: ${{ vars.ASWIN_USER1412 }}
+          DB_USERNAME: ${{ vars.ASWIN_USER1412 }}
         run: |
           echo "Username is $ASWIN_USER1412"
 
