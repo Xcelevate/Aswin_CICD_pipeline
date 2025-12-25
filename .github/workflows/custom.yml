@@ -1,0 +1,39 @@
+name: CICD Pipeline Simulation
+ 
+on:
+  push:
+    branches: [ main ]
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build step
+        run: echo "Building the application"
+ 
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate
+        run: echo "Validating the application"
+ 
+  scanning:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scanning
+        run: echo "Scanning the application"
+       
+ 
+  deploy-pre-request:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy pre-request
+        run: echo "Running tests after valid"
+ 
+  deployment:
+    needs: deploy-pre-request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment
+        run: echo "Running tests after deploy-pre-request"
